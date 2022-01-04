@@ -8,6 +8,7 @@ const {interface, bytecode} = require('../compile')
 describe('Inbox', () => {
     let accounts; 
     let inbox;
+    const INITIAL_STRING = 'Hi there';
 
     beforeEach(async () => {
         //get a list of all accounts
@@ -16,7 +17,7 @@ describe('Inbox', () => {
         inbox =  await new web3.eth.Contract(JSON.parse(interface))
             .deploy({
                 data: bytecode, 
-                arguments: ['Hi there']
+                arguments: [INITIAL_STRING]
             })
             .send({
                 from: accounts[0],
@@ -26,5 +27,19 @@ describe('Inbox', () => {
 
     it('deploys a contract', () => {
         assert.ok(inbox.options.address);
+    });
+
+    it('has a default message', async () => {
+        const message = await inbox.methods.message().call();
+        assert.equal(message, INITIAL_STRING);
+    });
+
+    it('can change the message', async () => {
+        let newMessage = 'Bye there';
+        await inbox.methods.setMessage(newMessage).send({
+            from: accounts[0]
+        });
+        const message = await inbox.methods.message().call();
+        assert.equal(message, newMessage);     
     });
 });
