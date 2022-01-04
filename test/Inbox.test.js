@@ -15,14 +15,14 @@ describe('Inbox', () => {
         accounts =  await web3.eth.getAccounts();
         //use une of those accounts to deploy the contract
         inbox =  await new web3.eth.Contract(JSON.parse(interface))
-            .deploy({
-                data: bytecode, 
-                arguments: [INITIAL_STRING]
-            })
-            .send({
-                from: accounts[0],
-                gas: '1000000'
-            });
+                                    .deploy({
+                                        data: bytecode,
+                                        arguments: [INITIAL_STRING]
+                                    })
+                                    .send({
+                                        from: accounts[0],
+                                        gas: '1000000'
+                                    });
     });
 
     it('deploys a contract', () => {
